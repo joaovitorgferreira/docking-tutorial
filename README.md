@@ -21,7 +21,7 @@ In addition, a device with an Intel Core i5 or better processor and at least 5 C
 ## Getting started
 
 The first step in performing molecular docking is to determine your ligand and protein.
-Once these two elements are defined, the corresponding files must be obtained in reliable databases.
+Once these two elements are defined, the corresponding files must be obtained from reliable databases.
 
 For ligands, recommended database is:
 
@@ -44,7 +44,7 @@ With these files in hand, you can proceed to prepare the files for docking.
 
 - Go to PubChem and search for the ligand of interest;
 - Download its 3D conformer in SDF format;
-- Open the SDF file in Avogadro;
+- Open the SDF file on Avogadro;
 - Go to Extensions > Molecular Mechanics > Setup Force Field and select the proper field field for your ligand type.
 
 > Different types of ligand require different types of force field. For organic molecules, for example, the use of MMFF94 is recommended.

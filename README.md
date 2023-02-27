@@ -1,5 +1,5 @@
 
-# Basic rotocol for protein-ligand docking
+# Basic protocol for protein-ligand docking
 
 Step by step to perform both rigid and flexible protein-ligand docking.
 
@@ -20,8 +20,14 @@ In addition, a device with an Intel Core i5 or better processor and at least 5 C
 
 ## Getting started
 
-The first step in performing molecular docking is to determine your protein and ligand.
+The first step in performing molecular docking is to determine your ligand and protein.
 Once these two elements are defined, the corresponding files must be obtained in reliable databases.
+
+For ligands, recommended database is:
+
+- [PubChem](https://pubchem.ncbi.nlm.nih.gov/)
+
+Once the ligand of interest is found, download its 3D conformer in SDF format.
 
 For proteins, recommended databases are:
 
@@ -30,15 +36,46 @@ For proteins, recommended databases are:
 
 Once the protein of interest is found, it must be downloaded in PDB format.
 
-> Attention: for best results, it is preferable to look for proteins whose resolution is less than 2 Å
-
-For ligands, recommended database is:
-
-- [PubChem](https://pubchem.ncbi.nlm.nih.gov/)
-
-Once the ligand of interest is found, download its 3D conformer in SDF format.
+> Attention: for best results, it is preferable to look for proteins whose resolution is less than 2 Å.
 
 With these files in hand, you can proceed to prepare the files for docking.
+
+## Ligand preparation
+
+- Go to PubChem and search for the ligand of interest;
+- Download its 3D conformer in SDF format;
+- Open the SDF file in Avogadro;
+- Go to Extensions > Molecular Mechanics > Setup Force Field and select the proper field field for your ligand type.
+
+> Different types of ligand require different types of force field. For organic molecules, for example, the use of MMFF94 is recommended.
+> > For more information on force field types, check [Open Babel's documentation](https://open-babel.readthedocs.io/en/latest/Forcefields/Overview.html).
+
+- Then go to Extensions > Optimize Geometry (or, alternatively press CTRL+ALT+O). You will notice adjustments in the position of the atoms in the molecule. Repeat this process until the molecule no longer responds to the command, which signals that it has reached its most stable conformation.
+- Next, go to Extensions > MOPAC;
+- For Calculation, select Geometry Optimization, and for Method, select PM6. Also add the total charge and the multiplicity of the molecule;
+- Press Generate, and a MOP file will be created.
+
+> PM6 is one of the best semi-empirical methods of electrical optimization of molecules. For more information, read [this article](https://pubmed.ncbi.nlm.nih.gov/19066990/).
+
+- Once that is done, go to File > Save as, and save the optimized molecule as a MOL2 and XYZ file.
+
+> The MOL2 file will be used in the next steps and the XYZ file is a security record, in case it is necessary to return to the optimized molecule.
+
+- Go to the folder where you saved the previous files and double-click the MOP file;
+- After MOPAC finishes the calculations, new files will be created in your folder. Open the OUT file with Notepad++;
+- Also open your MOL2 file with Notepad++;
+- In the open OUT file, look for the NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS section. Copy the numerical values from the CHARGE column;
+- Go to the open MOL2 file, and paste the copied column replacing the last column in the file;
+- Go back to the open OUT file, look for the CARTESIAN COORDINATES section. Copy the numerical values of the three columns (x, y and z);
+- Then go to the MOL2 file and paste the copied columns replacing the 3 middle columns, right after the column with the atoms.
+- Save the MOL2 file.
+
+> This process will adjust the charges and positional coordinates of each atom in the molecule so that it is in the most energetically stable conformation possible, according to MOPAC calculations.
+
+- Open AutoDockTools and from the bottom menu select Ligand > Input > Open. Change the file type in the right corner bar to MOL2, and open the optimized ligand file.
+- Check that the molecule is intact and without anomalies (such as loose atoms, abnormally long bonds, etc.);
+- Then select Ligand > Torsion Tree > Detect Root to observe the torsion root of the molecule;
+- Finally, select Ligand > Output > Save as PDBQT to save the molecule in PDBQT format, which is required for molecular docking.
 
 ## Protein preparation
 
@@ -132,6 +169,9 @@ To prepare your protein, you must clean it, check that it does not have any miss
 
 ## Performing rigid docking
 
+> Rigid docking is a method based on static targets and ligands, which allows a simple and quick solution to analyses. It is important to note, however, that this simplicity also entails certain limitations, since, at the biological level, interactions are always dynamic.
+> > For more information, check [this article](https://www.eurekaselect.com/article/103082).
+
 - Open the DockingScript folder, transfer all the ligand files to the ligands folder;
 - Open the vina.txt file with Notepad++ and change the first line to receptor = receptor.pdbqt;
 - Open the grid dimensions file with Notepad++ and copy and paste the coordinates and size values into the vina.txt file. Save it.
@@ -149,4 +189,36 @@ To prepare your protein, you must clean it, check that it does not have any miss
 - Then you can click Show Distances to see their distances.
   
 ## Performing flexible docking
+
+> Flexible docking follows the same precepts as rigid docking, distinguishing itself by incorporating in its analysis the flexibility of the protein-ligand interaction in its different conformations and, thus, offering more reliable results.
+>> For more information, check [this article](https://www.eurekaselect.com/article/103082).
+  
+- Create a flexible residues folder in your computer. It must contain a script file, a vina exe file, a vina txt file, and a prepareflexreceptor python file.
+  
+> You can easily download all of those from the flexible_residues folder 
+  
+- First step is to define the residues you want to keep flexible. You can either decide it manually, based on the literature, or if you do not have that information, you can use either the output ligand created by rigid docking, or the pdb file with the protein-ligand complex, in case you have it;
+- To use a previously created file, go to Discovery Studio, open your protein and add your ligand, just like the steps described above;
+- Once you have your interactions set, check if your protein has more than one monomer. If it does, delete the extra monomers and leave only one;
+- Next, select “Interacting Receptor Atoms” (if you do it correctly, you will highlight them in yellow).
+- Then copy them (by pressing Ctrl+C), click New, and paste them (Ctrl+V) in the new tab.
+- Now you have all the relevant residues that should be flexible for your docking process. To check their names, just click on AminoAcid in the lower menu and take note of the residues there.
+- For a more convenient way to collect their names, you can just click on the first one, hold Shift and click on the last one. Then you copy and paste it in a txt file.
+- Once you’ve done that, go to the flexible residues folder. Copy the path to the folder by right clicking the bar and selecting “Copy as path”.
+- Now, open Modeller, type chdir and paste the path you copied in the previous step. Press Enter.
+- Type **python prepare_flexreceptor.py -r receptor.pdbqt -s** and the list of residues you previously copied and pasted. Make sure to not leave any space between the residue names, separating them by commas. Press Enter.
+
+> If everything works well, you will see two new files in the flexible residue folder: receptor_flex.pdbqt and receptor_rigid.pdbqt.
+
+- Add a new folder to this flexible residue folder. Name it ligands and add there all the ligands you wish to use for the docking – just like for the rigid residues docking. 
+- Open the vina txt file with Notepad++ and change the coordinates and size of the grid box (just like for the rigid residue docking).
+- Once you’ve done that, just double click the script_vina file and press Enter 3 times to get the process started.
+- To analyze the results, just open Discovery Studio and slide each molecule present in your out folder at a time. You should be able to see both ligand and flexible residues in different conformations there. 
+
+> Make sure to change the display style to ball stick, otherwise you won’t be able to see the residues.
+
+- Next, you can check each conformation to analyze how they change the distances between your ligand and the residues you are interested in.
+- To check for possible new interactions (that is, interactions formed with other residues), just slide the receptor_rigid.pdbqt file to the same screen.
+- Select the receptor file and click “Define Receptor”, then select the PDB file and click “Define Ligand”.
+- Next, click Ligand Interactions. You will see the interactions between the ligand and the residues (both flexible and rigid ones).
 

@@ -1,0 +1,19 @@
+receptor = receptor.pdbqt
+ligand = ligands/*.pdbqt
+
+center_x = 33.551
+center_y = -45.941
+center_z = 35.616
+size_x = 50
+size_y = 70
+size_z = 48
+
+out = out/%%T
+log = log/%%~nT.txt
+
+num_modes = 20
+
+exhaustiveness = 80
+
+
+

@@ -89,7 +89,7 @@ To prepare your protein, you must clean it, check that it does not have any miss
 
 ### Checking for missing residues
 
-- Change your protein file name to 'qpdb' and use script1.py from the missing_residue_folder.
+- Change your protein file name to 'qpdb' and use script1.py from the missing_residue folder.
 
 > Remember to have both the qpdb file and the scripts in the same folder on your computer!
 
@@ -172,7 +172,7 @@ To prepare your protein, you must clean it, check that it does not have any miss
 > Rigid docking is a method based on static targets and ligands, which allows a simple and quick solution to analyses. It is important to note, however, that this simplicity also entails certain limitations, since, at the biological level, interactions are always dynamic.
 > > For more information, check [this article](https://www.eurekaselect.com/article/103082).
 
-- Open the DockingScript folder, transfer all the ligand files to the ligands folder;
+- Open the rigid_docking folder, transfer all the ligand files to the ligands folder;
 - Open the vina.txt file with Notepad++ and change the first line to receptor = receptor.pdbqt;
 - Open the grid dimensions file with Notepad++ and copy and paste the coordinates and size values into the vina.txt file. Save it.
 
@@ -195,7 +195,7 @@ To prepare your protein, you must clean it, check that it does not have any miss
   
 - Create a flexible residues folder in your computer. It must contain a script file, a vina exe file, a vina txt file, and a prepareflexreceptor python file.
   
-> You can easily download all of those from the flexible_residues folder 
+> You can easily download all of those from the flexible_docking folder 
   
 - First step is to define the residues you want to keep flexible. You can either decide it manually, based on the literature, or if you do not have that information, you can use either the output ligand created by rigid docking, or the pdb file with the protein-ligand complex, in case you have it;
 - To use a previously created file, go to Discovery Studio, open your protein and add your ligand, just like the steps described above;
